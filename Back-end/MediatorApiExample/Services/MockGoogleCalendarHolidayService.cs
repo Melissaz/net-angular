@@ -11,7 +11,10 @@ public class MockGoogleCalendarHolidayService : IHolidayService
 {
     public Task<List<CalendarEvent>> GetHolidays(Country country, DateTime startDate)
     {
-        var file = File.ReadAllText($"Services/MockData/GoogleCalendarAPI/{country}.json");
+        var basePath = AppDomain.CurrentDomain.BaseDirectory;
+        var filePath = Path.Combine(basePath, "Services", "MockData", "GoogleCalendarAPI", country + ".json");
+        var file = File.ReadAllText(filePath);
+        
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
