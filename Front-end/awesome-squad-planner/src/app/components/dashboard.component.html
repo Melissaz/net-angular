@@ -23,16 +23,23 @@
         <span class="member-name">{{ member.Name }}</span> -
         <span class="member-country">{{ member.Location.Country }}</span>,
         <span class="member-region">{{ member.Location.Region }}</span>
-        <ul class="holidays-list">
-          <li class="holiday-item" *ngFor="let holiday of holidays[member.Id]">
-            <span class="holiday-summary">{{ holiday.summary }}</span> -
-            <span class="holiday-start">{{ holiday.start.date.split('T')[0] }}</span> to
-            <span class="holiday-end">{{ holiday.end.date.split('T')[0] }}</span>
-          </li>
-        </ul>
+
+        <div *ngIf="holidays[member.Id]?.length; else noHolidays">
+          <ul class="holidays-list">
+            <li class="holiday-item" *ngFor="let holiday of holidays[member.Id]">
+              <span class="holiday-summary">{{ holiday.summary }}</span> -
+              <span class="holiday-start">{{ holiday.start.date.split('T')[0] }}</span> to
+              <span class="holiday-end">{{ holiday.end.date.split('T')[0] }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <ng-template #noHolidays>
+          <div class="no-holidays">No holidays</div>
+        </ng-template>
       </li>
     </ul>
-  </div>
+</div>
 
   <div class="dashboard-section">
     <h3 class="section-title">Issues:</h3>

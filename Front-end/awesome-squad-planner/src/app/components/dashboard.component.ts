@@ -4,70 +4,61 @@ import { Issue } from '../models/issue.model';
 import { Holiday } from '../models/holiday.model';
 import { TeamMember } from '../models/team-member.model';
 import { Sprint } from '../models/sprint.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-
 export class DashboardComponent implements OnInit {
-
   capacity: number = 0;
   velocity: number = 0;
   issues: Issue[] = [];
   holidays: { [key: string]: Holiday[] } = {};
   teamMembers: TeamMember[] = [];
-  startDate: string =  new Date().toISOString();
+  startDate: string = new Date().toISOString();
   currentSprint: Sprint[] = [];
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService) {}
 
-  ngOnInit(): void {
-    this.loadCurrentSprint();
-    this.loadCapacity();
-    this.loadVelocity();
-    this.loadIssues();
-    this.loadTeamMembers();
+  async ngOnInit(): Promise<void> {
+    await this.loadData();
   }
 
-  loadCurrentSprint(): void {
-    this.dataService.getCurrentSprint().subscribe(data => {
-      this.currentSprint = data;
-    });
+  private async loadData(): Promise<void> {
+    try {
+      const [currentSprint, capacity, velocity, issues, teamMembers] = await Promise.all([
+        this.dataService.getCurrentSprint(),
+        this.dataService.getCapacity(),
+        this.dataService.getVelocity(),
+        this.dataService.getIssues(),
+        this.dataService.getTeamMembers()
+      ]);
+
+      this.currentSprint = currentSprint;
+      this.capacity = capacity;
+      this.velocity = velocity;
+      this.issues = issues;
+      this.teamMembers = teamMembers;
+
+      const holidaysPromises = this.teamMembers.map(async member => {
+        this.holidays[member.Id] = await this.loadHolidaysForMember(member);
+      });
+      await Promise.all(holidaysPromises);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
   }
 
-  loadTeamMembers(): void {
-    this.dataService.getTeamMembers().subscribe(data => {
-      this.teamMembers = data;
-      for (const member of this.teamMembers) {
-        this.loadHolidaysForMember(member);
-      }
-    });
-  }
-
-  loadHolidaysForMember(member: TeamMember): void {
-    this.startDate = this.currentSprint[0]?.startDate ? this.currentSprint[0]?.startDate : new Date().toISOString();
-    this.dataService.getHolidays(member.Location.Country, this.startDate).subscribe(holidays => {
-      this.holidays[member.Id] = holidays;
-    });
-  }
-
-  loadCapacity(): void {
-    this.dataService.getCapacity().subscribe(data => {
-      this.capacity = data;
-    });
-  }
-
-  loadVelocity(): void {
-    this.dataService.getVelocity().subscribe(data => {
-      this.velocity = data;
-    });
-  }
-
-  loadIssues(): void {
-    this.dataService.getIssues().subscribe(data => {
-      this.issues = data;
-    });
+  private async loadHolidaysForMember(member: TeamMember): Promise<Holiday[]> {
+    try {
+      const startDate = this.currentSprint[0]?.startDate || new Date().toISOString();
+      const holidays = await this.dataService.getHolidays(member.Location.Country, startDate);
+      return holidays;
+    } catch (error) {
+      console.error('Error loading holidays for member:', member.Id, error);
+      return [];
+    }
   }
 }
