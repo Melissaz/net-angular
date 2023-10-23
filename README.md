@@ -15,7 +15,7 @@ Location: back-end/MediatorApiExample
 Please refer to the backend README for more details on setting up and running the backend project.
 
 ### Frontend: Awesome Squad Planner
-The frontend is developed using Angular, providing a rich and interactive user interface. It communicates with the backend to fetch, display, and manipulate data.
+The frontend is developed using Angular, providing an interactive user interface. It communicates with the backend to fetch and display data.
 
 Technology: Angular
 Location: front-end/awesome-squad-planner
