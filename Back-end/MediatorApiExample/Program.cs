@@ -13,8 +13,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddTransient<IHolidayService, GoogleCalendarHolidayService>();
-builder.Services.AddTransient<IJiraService, JiraService>();
+// builder.Services.AddTransient<IHolidayService, GoogleCalendarHolidayService>();
+builder.Services.AddTransient<IHolidayService, MockGoogleCalendarHolidayService>();
+// builder.Services.AddTransient<IJiraService, JiraService>();
+builder.Services.AddTransient<IJiraService, MockJiraService>();
 builder.Services.AddTransient<ITeamMemberService, MockTeamMemberService>();
 builder.Services.AddHttpClient();
 // Add services to the container.

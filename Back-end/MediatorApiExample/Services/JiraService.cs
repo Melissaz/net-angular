@@ -7,7 +7,7 @@ namespace MediatorApiExample.Services;
 public class JiraService : IJiraService
 {
     private readonly HttpClient _httpClient;
-
+    
     public JiraService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
@@ -16,7 +16,7 @@ public class JiraService : IJiraService
         var byteArray = Encoding.ASCII.GetBytes(authorizationKey);
         _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
     }
-
+    
     public async Task<SprintsResponse> GetSprintsAsync()
     {
         return await _httpClient.GetFromJsonAsync<SprintsResponse>(

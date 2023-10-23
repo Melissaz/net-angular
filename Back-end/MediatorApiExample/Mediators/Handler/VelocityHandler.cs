@@ -31,6 +31,6 @@ public class VelocityHandler : IRequestHandler<VelocityQuery, double>
             totalPoints += issues.Issues.Sum(issue => issue.Fields.CustomField_10016);
         }
 
-        return totalPoints / 3; // Average over 3 sprints
+        return Math.Round(totalPoints / 3, 2); // Average over 3 sprints
     }
 }

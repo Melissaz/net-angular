@@ -31,7 +31,7 @@ public class CapacityHandler : IRequestHandler<CapacityQuery, double>
             totalHolidays += memberHolidays.Count;
         }
         
-        var daysInSprint = 10; // 2-week sprints
+        const int daysInSprint = 10; // 2-week sprints
 
         return (daysInSprint - totalHolidays) * teamMembers.Count;
     }

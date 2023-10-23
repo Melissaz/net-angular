@@ -16,7 +16,7 @@ public class MockTeamMemberService : ITeamMemberService
                 Location = new Location
                 {
                     Id = "c16aa679-910a-4955-a225-1a13f9b8f607",
-                    Country = Country.Pk,
+                    Country = Country.Pakistan,
                     Region = "Karachi"
                 }
             },

@@ -1,4 +1,5 @@
 using MediatorApiExample.Mediators.Queries;
+using MediatorApiExample.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +17,8 @@ public class IssuesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<double> Get()
+    public async Task<List<Issue>> Get()
     {
-        return await _mediator.Send(new VelocityQuery());
+        return await _mediator.Send(new IssuesQuery());
     }
 }

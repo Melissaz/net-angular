@@ -67,7 +67,7 @@ export class DashboardComponent implements OnInit {
 
   loadIssues(): void {
     this.dataService.getIssues().subscribe(data => {
-      this.issues = data.issues;
+      this.issues = data;
     });
   }
 }
